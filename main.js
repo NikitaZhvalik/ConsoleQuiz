@@ -16,25 +16,28 @@ let score = 0;
 
 //! Показываем случайный вопрос
 let questionMassive = [question1, question2, question3, question4];
-questionMassive = questionMassive.sort(() => Math.random() - 0.5);
-console.log(questionMassive[0].question);
+
+function seeQuestion() {
+    questionMassive = questionMassive.sort(() => Math.random() - 0.5);
+    console.log(questionMassive[0].question);
+}
+seeQuestion();
 
 //! Показываем варианты ответов на вопрос 
-function seeQuestion() {
+function seeAnswer() {
     for (let i = 0, index = 0; i < question1.answer.length, index < question1.answer.length; i++, index++) {
         console.log(`${index}: ${questionMassive[0].answer[i]}`);
     }
 }
-seeQuestion();
+seeAnswer();
 
 //! Запускаем цикл проверки ответов на вопрос
-function goQuestion() {
+function goCheckQuestion() {
     while (true) {
         const userAnswer = prompt('Введите ответ!');
         if (userAnswer == `${questionMassive[0].numberRightAnswer}`) {
             console.log('Правильный ответ!');
             console.log(`Счет: ${score += 1}`);
-            break;
         }
         if (userAnswer === 'exit') {
             console.log('Вы вышли из игры!');
@@ -43,8 +46,9 @@ function goQuestion() {
         if (userAnswer !== `${questionMassive[0].numberRightAnswer}`) {
             console.log('Неправильный ответ!');
             console.log(`Счет: ${score}`);
-            break;
         }
+        seeQuestion();
+        seeAnswer();
     };  
 }
-goQuestion();
+goCheckQuestion();
