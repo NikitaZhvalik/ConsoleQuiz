@@ -1,0 +1,11 @@
+body {
+    font-family: sans-serif;
+    line-height: 1.5;
+    padding: 15px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+li {
+    margin-top: 15px;
+}
