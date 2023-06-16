@@ -1,3 +1,4 @@
+let secretFunc = (function secretFunc() {
 //! Конструктор вопросов
 function Question (question, answer, numberRightAnswer) {
     this.question = question;
@@ -52,3 +53,4 @@ function goCheckQuestion() {
     };  
 }
 goCheckQuestion();
+})();
