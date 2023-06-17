@@ -1,53 +1,92 @@
-let secretFunc = (function secretFunc() {
-//! Конструктор вопросов
-function Question (question, answer, numberRightAnswer) {
+(function () {
+  //! Конструктор вопросов
+  function Question(question, answers, correct) {
     this.question = question;
-    this.answer = answer;
-    this.numberRightAnswer = numberRightAnswer;
-};
+    this.answers = answers;
+    this.correct = correct;
+  }
 
-//! Вопросы
-let question1 = new Question ('2x2 = ?', [2, 4,], 1);
-let question2 = new Question ('5x5 = ?', [25, 14, 88, 30], 0);
-let question3 = new Question ('10x11 = ?', [112, 110, 100], 1);
-let question4 = new Question ('4x8 = ?', [36, 40, 28, 32], 3);
+  //! Метод выводящий ответы
+  Question.prototype.displayQuestion = function () {
+    console.log("%c" + this.question, "background: #424242; color: white");
+    for (let i = 0; i < this.answers.length; i++) {
+      console.log(i + ". " + this.answers[i]);
+    }
+  };
 
-//! Счет
-let score = 0;
+  //! Метод для проверки ответа
+  Question.prototype.checkAnswer = function (answer, cb) {
+    let newScore;
+    if (answer === this.correct) {
+      console.log("%c" + "Правильный ответ!", "background: green; color: white");
+      newScore = cb(true);
+    } else {
+      console.log("%c" + "Неправильный ответ. Попробуйте еще раз", "background: red; color: white");
+      newScore = cb(false);
+    }
+  //! Выводим счет
+    this.displayScore(newScore)
+  };
 
-//! Массив с вопросами
-let questionMassive = [question1, question2, question3, question4];
-
-//! Показываем случайный вопрос
-function seeQuestion() {
-    questionMassive = questionMassive.sort(() => Math.random() - 0.5);
-    console.log(questionMassive[0].question);
-
-    questionMassive[0].answer.forEach((el, i) => {
-        console.log(`${i}: ${el}`);
-    });
-}
-seeQuestion();
+  //! Метод для вывода счета
+  Question.prototype.displayScore = function(score) {
+    console.log("%c" + `Ваш счет равен: ${score}`, "background: orange; color: white");
+  };
 
 
-//! Запускаем цикл проверки ответов на вопрос
-function goCheckQuestion() {
-    while (true) {
-        const userAnswer = prompt('Введите ответ!');
-        if (userAnswer == `${questionMassive[0].numberRightAnswer}`) {
-            console.log('Правильный ответ!');
-            console.log(`Счет: ${score += 1}`);
+  //! Вопросы
+  let question1 = new Question(
+    "JavaScript cамый лучший язык программирования?",
+    ["да", "нет"],
+    0
+  );
+  let question2 = new Question(
+    "This внутри метода всегда ссылается на ...?",
+    ["window", "document", "объект"],
+    2
+  );
+  let question3 = new Question(
+    "Что такое scope в JavaScript?",
+    [
+      "документ с разметкой",
+      "Все методы внутри объекта",
+      "движок JavaScript",
+      "область видимости",
+    ],
+    3
+  );
+
+  //! Массив с вопросами
+  let questions = [question1, question2, question3];
+
+  //! Счет в игре
+  function score() {
+    let scoreValue = 0;
+    return function (correct) {
+        if (correct === true) {
+            scoreValue++;
         }
-        if (userAnswer === 'exit' || userAnswer === null) {
-            console.log('Вы вышли из игры!');
-            break;
-        }
-        if (userAnswer !== `${questionMassive[0].numberRightAnswer}`) {
-            console.log('Неправильный ответ!');
-            console.log(`Счет: ${score}`);
-        }
-        seeQuestion();
-    };  
-}
-goCheckQuestion();
+        return scoreValue;
+    }
+  }
+  let keepScore = score();
+
+
+     //! Следующий вопрос
+    function nextQuestion() {
+    //! Случайный вопрос
+    let n = Math.floor(Math.random() * questions.length);
+    //! Распечатываем в консоль случайный вопрос с вариантами ответа
+    questions[n].displayQuestion();
+    //! Вопрос пользователю
+    let answer = prompt("Введите номер верного ответа:");
+    //! Проверка ответа с помощью метода checkAnswer
+    questions[n].checkAnswer(parseInt(answer), keepScore);
+    //! Выход из игры
+    if (answer !== 'exit' && answer !== null) {
+        nextQuestion();
+    }
+    };
+    nextQuestion();
 })();
+
